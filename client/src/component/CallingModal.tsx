@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Dialog, DialogActions, DialogContent, Button } from "@mui/material";
+import  { useEffect, useContext } from "react";
+import { Dialog, DialogContent,  } from "@mui/material";
 import { SocketContext } from "../socketContext";
 
 export const CallingModal = ({
@@ -9,13 +9,16 @@ export const CallingModal = ({
   CallingTo: any;
   setCallingTo: any;
 }) => {
-  const [open, setOpen] = useState(false);
-  const [data, setData] = useState<any>();
+
 
   const socket = useContext(SocketContext);
 
   useEffect(() => {
     socket.on("callDeclined", () => {
+      setCallingTo(null);
+    });
+
+    socket.on("callAccepted", () => {
       setCallingTo(null);
     });
   }, []);

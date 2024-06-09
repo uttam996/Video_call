@@ -1,16 +1,13 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BaseUrl } from "../ApiEndPoints";
 import { toast } from "react-toastify";
-import { SocketContext } from "../socketContext";
 
 export default function Login() {
   const navigate = useNavigate();
-  const socket = useContext(SocketContext);
-
   const [userData, setUserData] = useState({
     email: "",
     password: "",

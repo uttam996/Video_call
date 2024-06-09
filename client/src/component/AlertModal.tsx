@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
+import  { useState, useEffect, useContext } from "react";
 import { Dialog, DialogActions, DialogContent, Button } from "@mui/material";
 import { SocketContext } from "../socketContext";
-import {Peer} from 'peerjs'
-import { Navigate, useNavigate } from "react-router-dom";
 import { PeerContext } from "../PeerContext";
+import { MediaContext } from "../MedialContext";
+import { toast } from "react-toastify";
 
 export const AlertModal = () => {
   const [open, setOpen] = useState(false);
@@ -13,7 +13,7 @@ export const AlertModal = () => {
   const peer = useContext(PeerContext)
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-const navigate = useNavigate();
+  const { mystream, userStream }: any = useContext(MediaContext)
 
 
 
@@ -24,34 +24,49 @@ const navigate = useNavigate();
       setOpen(true);
     });
 
-    
+
   }, []);
 
   const callAppcepted = async () => {
     // socket.emit("callAccepted", { callerId: data.callerId,from:user._id});
     // get peer id 
-   
-    const stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
-    console.log(data);
-    const call = peer.call(data.peer, stream);
-    call.on("stream", (remoteStream) => {
-     console.log(remoteStream);
-    });
+    try {
+      console.log(mystream, "mystream", userStream, "userStream");
+
+      if (!data?.peer) {
+        toast.error("Peer id not found");
+      }
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+
+      if (mystream.current) {
+        mystream.current.srcObject = stream;
+      }
+
+      const call = peer.call(data.peer, stream);
+      call.on("stream", (remoteStream) => {
+        
+        if (userStream.current) {
+          userStream.current.srcObject = remoteStream;
+          userStream.current.play()
+        }
+        
+      }
+      );
+
+      console.log("call accepted");
+      console.log(userStream);
+
+      socket.emit("callAccepted", { callerId: data.callerId, from: user._id });
 
 
+    }
 
-
-
-
-
-
-
-    
-    
-
-
-
-    
+    catch (error) {
+      console.log(error)
+    }
   };
 
   const Calldeclined = () => {

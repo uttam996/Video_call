@@ -1,5 +1,5 @@
 import {
-  Avatar,
+  
   Button,
   List,
   ListItem,
@@ -13,9 +13,6 @@ import { toast } from "react-toastify";
 import { BaseUrl } from "../ApiEndPoints";
 import { SocketContext } from "../socketContext";
 import { CallingModal } from "./CallingModal";
-import {Peer} from 'peerjs'
-import { useNavigate } from "react-router-dom";
-import { PeerContext } from "../PeerContext";
 
 export default function UserList() {
   const [onlineUser, setOnlineUser] = useState<any>({});
@@ -23,12 +20,10 @@ export default function UserList() {
   const [users, setUsers] = useState([]);
   const [callingTo, setCallingTo] = useState<string>();
 
-  const peer = useContext(PeerContext)
 
  
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const navigate = useNavigate();
 
 
 
@@ -52,14 +47,10 @@ export default function UserList() {
   }) => {
     try {
     
-      
-
-
-
       let peerId = localStorage.getItem("peerId")|| "";
-      socket.emit("call", { to: data.to, from: data.from, callerId: user._id,
-      peerId:peerId
-       });
+      console.log(peerId);
+      socket.emit("call", { to: data.to, from: data.from, callerId: user._id,peerId:peerId});
+
     
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Something went wrong");

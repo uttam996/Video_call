@@ -1,3 +1,3 @@
 
-export const BaseUrl = "http://192.168.1.96:3000/api";
-export const SocketUrl = "http://192.168.1.96:3000"
+export const BaseUrl = "http://100.109.207.135:3000/api";
+export const SocketUrl = "http://100.109.207.135:3000"
